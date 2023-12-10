@@ -1,4 +1,11 @@
 # category
+The goal is to create a category tree, with infinite depth.
+
+Solution should include next features:
+- Ability to add new subcategories for each category.
+- Rename category.
+- Delete category (if it has children - delete them as well).
+- Expand/Collapse parent category (children categories should collapse too).
 
 ## Project setup
 ```
@@ -15,15 +22,3 @@ npm run serve
 npm run build
 ```
 
-### Run your unit tests
-```
-npm run test:unit
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
