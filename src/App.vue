@@ -14,7 +14,7 @@
       <tree
         :node="category"
         :depth="0"
-        @delete-category="updateList"
+        @delete-category="updateListAfterDelete"
         @edit-category="openEditModal"
         @add-category="openAddModal"
       ></tree>
@@ -116,10 +116,10 @@ export default {
     },
     changeCategory(payload) {
       if (this.isEditCategory) {
-        this.findObjectById(payload, this.categoriesList);
+        this.updateCategoryById(payload, this.categoriesList);
       } else {
         this.newChild = payload;
-        this.findObjectById(this.updateCategory, this.categoriesList);
+        this.updateCategoryById(this.updateCategory, this.categoriesList);
       }
 
       this.closeModal();
@@ -129,11 +129,11 @@ export default {
       this.isEditCategory = false;
       this.updateCategory = null;
     },
-    findObjectById(category, array) {
+    updateCategoryById(category, array) {
       const stack = [...array]; // Create a stack with initial array
 
-      while (stack.length) {
-        const obj = stack.pop(); // Get the last element from the stack
+      for (let i = 0; i < stack.length; i += 1) {
+        const obj = stack[i];
 
         if (obj.id === category.id) {
           if (this.isEditCategory) {
@@ -156,34 +156,36 @@ export default {
 
       return null; // Return null if object with ID is not found
     },
-    updateList(idToDelete) {
-      const updatedTree = this.deleteNodeById(this.categoriesList, idToDelete);
+    updateListAfterDelete(idToDelete) {
+      const updatedTree = this.deleteCategoryById(this.categoriesList, idToDelete);
 
       this.categoriesList = updatedTree;
       this.lastClickedNodeId = idToDelete;
     },
-    deleteNodeById(nodeList, idToDelete) {
-      for (let i = 0; i < nodeList.length; i += 1) {
-        const node = nodeList[i];
+    deleteCategoryById(catList, idToDelete) {
+      const stack = [...catList];
 
-        if (node.id === idToDelete) {
-          nodeList.splice(i, 1);
+      for (let i = 0; i < stack.length; i += 1) {
+        const category = stack[i];
 
-          return nodeList; // Node found and removed
+        if (category.id === idToDelete) {
+          stack.splice(i, 1);
+
+          return stack; // Category found and removed
         }
 
-        if (node.children) {
-          const updatedChildren = this.deleteNodeById(node.children, idToDelete);
+        if (category.children) {
+          const updatedChildren = this.deleteCategoryById(category.children, idToDelete);
 
-          if (updatedChildren !== node.children) {
-            node.children = updatedChildren;
+          if (updatedChildren !== category.children) {
+            category.children = updatedChildren;
 
-            return nodeList; // Node updated with new children list
+            return stack; // Category updated with new children list
           }
         }
       }
 
-      return nodeList; // Node not found, return original list
+      return stack; // Category not found, return original list
     },
   },
 };

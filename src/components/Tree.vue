@@ -62,8 +62,8 @@ export default {
   methods: {
     arrowClass(node) {
       return {
-        'fa fa-chevron-right': !this.showChildren && node.children,
-        'fa fa-chevron-down': this.showChildren && node.children,
+        'fa fa-chevron-right': !this.showChildren && node.children?.length,
+        'fa fa-chevron-down': this.showChildren && node.children?.length,
       };
     },
     hasChildrenClass(node) {
